@@ -19,8 +19,11 @@ const int IGNORE_CHARS = 100; //Characters ignored by istream.ignore()
 struct Grocery {
     string name;
     double price;
-    //Compare groceries by price
+    //For >, <, >=, <=, compare groceries by price for sorting, min, and max
     friend bool operator<(const Grocery& g1, const Grocery& g2);
+
+    //For ==, compare groceries by name for find()
+    friend bool operator==(const Grocery& g1, const Grocery& g2);
 };
 //Add other comparisons in case min/max requires
 bool operator<=(const Grocery& g1, const Grocery& g2);
@@ -87,6 +90,17 @@ int main() {
     cout << "Top 5 most expensive items:" << endl;
     sort(groceries.rbegin(), groceries.rend());
     displayGroceries(groceries);
+
+    //Prompt user for an item name to find prices
+    coutLine();
+    Grocery searchDummy;
+    array<Grocery, groceries.size()>::iterator foundGrocery;
+    do {
+        cout << "Enter the name of an item to search for: " << endl;
+        getline(cin, searchDummy.name);
+        foundGrocery = find(groceries.begin(), groceries.end(), searchDummy);
+    } while(foundGrocery == groceries.end());
+    cout << foundGrocery->name << ": " << foundGrocery->price << endl;
 }
 
 double accPrices(double acc, const Grocery&g) {
@@ -128,6 +142,11 @@ void displayGroceries(const array<Grocery, size>& arr) {
         cout << g.name << ": $" << g.price << "  ";
     }
     cout << endl;
+}
+
+//Compare by name for compatability with find()
+bool operator==(const Grocery& g1, const Grocery& g2) {
+    return g1.name == g2.name;
 }
 
 //Define comparison operators to compare by prices
