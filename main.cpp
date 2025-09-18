@@ -41,11 +41,13 @@ void fillGroceries(array<Grocery, size>& arr, string filename);
 
 /**
  * Displays given array of groceries
+ * If specified, displays only the first given number of elements
  * @todo Add better formatting
  * @param arr Array of groceries to display
+ * @param nums If specified, amount of items to display
  */
 template<size_t size>
-void displayGroceries(const array<Grocery, size>& arr);
+void displayGroceries(const array<Grocery, size>& arr, int nums = size);
 
 /**
  * Output a line of characters
@@ -69,6 +71,9 @@ double accPrices(double acc, const Grocery& g);
  */
 string LowerString(const string str);
 
+/**
+ * @todo add compatability with display amount
+ */
 int main() {
     const string FILENAME = "data.txt";
     const int SIZE = 5;
@@ -97,18 +102,18 @@ int main() {
     coutLine();
     cout << "Top 5 cheapest items:" << endl;
     sort(groceries.begin(), groceries.end());
-    displayGroceries(groceries);
+    displayGroceries(groceries, 5);
     coutLine();
     cout << "Top 5 most expensive items:" << endl;
     sort(groceries.rbegin(), groceries.rend());
-    displayGroceries(groceries);
+    displayGroceries(groceries, 5);
 
     //Prompt user for an item name to find prices until a valid item is found
     coutLine();
     Grocery searchDummy; //operator== for find() requires another grocery object
     array<Grocery, groceries.size()>::iterator foundGrocery;
     do {
-        cout << "Enter the name of an item to search for: " << endl;
+        cout << "Enter the name of an item to search for or type \"quit\" to quit: " << endl;
         //operator== compares names of groceries
         //get name from input and populate it to the dummy Grocery variable
         getline(cin, searchDummy.name);
@@ -122,9 +127,11 @@ int main() {
             }
             cout << endl << endl;
         }
-    } while(foundGrocery == groceries.end());
+    } while(foundGrocery == groceries.end() && searchDummy.name != "quit");
     //output price of found item
-    cout << foundGrocery->name << ": " << foundGrocery->price << endl;
+    if (searchDummy.name != "quit") {
+        cout << foundGrocery->name << ": " << foundGrocery->price << endl;
+    }
 }
 
 double accPrices(double acc, const Grocery&g) {
@@ -158,12 +165,14 @@ void fillGroceries(array<Grocery, size>& arr, string filename) {
 }
 
 template<size_t size>
-void displayGroceries(const array<Grocery, size>& arr) {
+void displayGroceries(const array<Grocery, size>& arr, int nums) {
     //Set decimal precision for money formatting
     cout << fixed << setprecision(2);
+    //Take the min of size & nums to prevent out of bounds errors
+    nums = (nums > size) ? size : nums;
     //Outputs elements followed by two spaces
-    for(Grocery g : arr) {
-        cout << g.name << ": $" << g.price << "  ";
+    for(int i = 0; i < nums; i++) { 
+        cout << arr.at(i).name << ": $" << arr.at(i).price << "  ";
     }
     cout << endl;
 }
