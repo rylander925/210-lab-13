@@ -44,16 +44,6 @@ void fillGroceries(array<Grocery, size>& arr, string filename);
 template<size_t size>
 void displayGroceries(const array<Grocery, size>& arr);
 
-/**
- * Average elements of a given array as a double using 
- * accumulate() and size() functions
- * @note Accumulate must evaluate to a numeric int/double/long when used on arr
- * @param arr Array of any type to average values of 
- * @return Average of arr as a double
- */
-template<typename T, size_t size>
-double averageArray(const array<T, size>& arr);
-
 void coutLine(int size = 50, char lineChar = '=');
 
 /**
@@ -68,11 +58,22 @@ int main() {
     const string FILENAME = "data.txt";
     const int SIZE = 5;
     const int DISPLAY_AMOUNT = 5; //For displaying top 5/least 5 prices 
-    string input;
+
+    double totalPrice;
     array<Grocery, SIZE> groceries;
+
     fillGroceries(groceries, FILENAME);
+    totalPrice = accumulate(groceries.begin(), groceries.end(), 0.0, accPrices);
     cout << "Displaying data: " << endl;
-    displayGroceries(groceries)   
+    displayGroceries(groceries); //side effect: sets precision formatting to money format
+    cout << "Total price: $" << totalPrice << endl;
+    cout << "Average price: $" << totalPrice / groceries.size() << endl;
+    cout << "Price range: $" 
+         << max(groceries.begin(), groceries.end())->price << "-"
+         << min(groceries.begin(), groceries.end())->price 
+         << endl;
+    cout << "Top 5 Most expensive items:" << endl;
+    sort(groceries.begin(), groceries.end());
 }
 
 double accPrices(double acc, const Grocery&g) {
@@ -86,12 +87,17 @@ void coutLine(int size, char lineChar) {
 
 template<size_t size>
 void fillGroceries(array<Grocery, size>& arr, string filename) {
+    //Open file
     ifstream infile;
     infile.open(filename);
+    //Verify file opened properly
     if (!infile.good()) {
         cout << "ERROR: File not found: \"" << filename  << "\"" << endl;
         throw ios_base::failure("Invalid file name");
     }
+    //Fill groceries; assumes formatted as:
+    //Blueberries
+    //12.15
     for(Grocery& g : arr) {
         getline(infile, g.name);
         infile >> g.price;
@@ -102,17 +108,13 @@ void fillGroceries(array<Grocery, size>& arr, string filename) {
 
 template<size_t size>
 void displayGroceries(const array<Grocery, size>& arr) {
+    //Set decimal precision for money formatting
     cout << fixed << setprecision(2);
+    //Outputs elements followed by two spaces
     for(Grocery g : arr) {
         cout << g.name << ": $" << g.price << "  ";
     }
     cout << endl;
-
-}
-
-template<typename T, size_t size>
-double averageArray(const array<T, size>& arr) {
-    return accumulate(arr.begin(), arr.end(), 0) * 1.0 / size;
 }
 
 //Define comparison operators to compare by prices
