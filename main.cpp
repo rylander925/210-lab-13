@@ -66,14 +66,27 @@ int main() {
     totalPrice = accumulate(groceries.begin(), groceries.end(), 0.0, accPrices);
     cout << "Displaying data: " << endl;
     displayGroceries(groceries); //side effect: sets precision formatting to money format
+
+    //Display total, average, max & min prices
+    coutLine();
+    cout << "Items: " << groceries.size();
     cout << "Total price: $" << totalPrice << endl;
     cout << "Average price: $" << totalPrice / groceries.size() << endl;
     cout << "Price range: $" 
-         << max(groceries.begin(), groceries.end())->price << "-"
-         << min(groceries.begin(), groceries.end())->price 
+         << max_element(groceries.begin(), groceries.end())->price 
+         << "-"
+         << min_element(groceries.begin(), groceries.end())->price 
          << endl;
-    cout << "Top 5 Most expensive items:" << endl;
+
+    //Use sort w/ forward & reverse iterators to display cheapest/most expensive items
+    coutLine();
+    cout << "Top 5 cheapest items:" << endl;
     sort(groceries.begin(), groceries.end());
+    displayGroceries(groceries);
+    coutLine();
+    cout << "Top 5 most expensive items:" << endl;
+    sort(groceries.rbegin(), groceries.rend());
+    displayGroceries(groceries);
 }
 
 double accPrices(double acc, const Grocery&g) {

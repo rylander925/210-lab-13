@@ -3,7 +3,7 @@ Blueberries
 Apple
 1.99
 Bananas
-4:99
+4.99
 Eggs
 12
 Ice Cream
