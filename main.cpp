@@ -91,15 +91,27 @@ int main() {
     sort(groceries.rbegin(), groceries.rend());
     displayGroceries(groceries);
 
-    //Prompt user for an item name to find prices
+    //Prompt user for an item name to find prices until a valid item is found
     coutLine();
-    Grocery searchDummy;
+    Grocery searchDummy; //operator== for find() requires another grocery object
     array<Grocery, groceries.size()>::iterator foundGrocery;
     do {
         cout << "Enter the name of an item to search for: " << endl;
+        //operator== compares names of groceries
+        //get name from input and populate it to the dummy Grocery variable
         getline(cin, searchDummy.name);
         foundGrocery = find(groceries.begin(), groceries.end(), searchDummy);
+
+        //output list of grocery names if given an invalid name
+        if (foundGrocery == groceries.end()) {
+            cout << " > Invalid grocery name. Here is a list of valid names:" << endl << " > ";
+            for(Grocery g : groceries) { 
+                cout << g.name << " " ;
+            }
+            cout << endl << endl;
+        }
     } while(foundGrocery == groceries.end());
+    //output price of found item
     cout << foundGrocery->name << ": " << foundGrocery->price << endl;
 }
 
