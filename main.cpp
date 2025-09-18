@@ -47,6 +47,11 @@ void fillGroceries(array<Grocery, size>& arr, string filename);
 template<size_t size>
 void displayGroceries(const array<Grocery, size>& arr);
 
+/**
+ * Output a line of characters
+ * @param size Length of the line
+ * @param lineChar Character composing line
+ */
 void coutLine(int size = 50, char lineChar = '=');
 
 /**
@@ -56,6 +61,13 @@ void coutLine(int size = 50, char lineChar = '=');
  * @return Sum of accumulator variable and price of the grocery g
  */
 double accPrices(double acc, const Grocery& g);
+
+/**
+ * Outputs a lowercase copy of a string. Does not modify the given string.
+ * @param str String to return a lowercase copy of
+ * @return Lowercase copy of str
+ */
+string LowerString(const string str);
 
 int main() {
     const string FILENAME = "data.txt";
@@ -156,9 +168,17 @@ void displayGroceries(const array<Grocery, size>& arr) {
     cout << endl;
 }
 
+string LowerString(const string str) {
+    string newStr = str;
+    for (char& c : newStr) {
+        c = tolower(c);
+    }
+    return newStr;
+}
+
 //Compare by name for compatability with find()
 bool operator==(const Grocery& g1, const Grocery& g2) {
-    return g1.name == g2.name;
+    return LowerString(g1.name) == LowerString(g2.name);
 }
 
 //Define comparison operators to compare by prices
