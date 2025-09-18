@@ -73,6 +73,7 @@ string LowerString(const string str);
 
 /**
  * @todo add compatability with display amount
+ * @todo test
  */
 int main() {
     const string FILENAME = "data.txt";
