@@ -28,32 +28,55 @@ bool operator>(const Grocery& g1, const Grocery& g2);
 bool operator>=(const Grocery& g1, const Grocery& g2);
 
 /**
- * @note File line must be "Name price"
+ * Fills given array with grocery names and prices from the provided file
+ * @param arr Array to fill with grocery objects
+ * @param filename Name of file to retrieve data from
+ * @note File lines must be formatted as Names\nPrice without whitespace after name
  */
 template<size_t size>
 void fillGroceries(array<Grocery, size>& arr, string filename);
 
+/**
+ * Displays given array of groceries
+ * @todo Add better formatting
+ * @param arr Array of groceries to display
+ */
 template<size_t size>
 void displayGroceries(const array<Grocery, size>& arr);
 
+/**
+ * Average elements of a given array as a double using 
+ * accumulate() and size() functions
+ * @note Accumulate must evaluate to a numeric int/double/long when used on arr
+ * @param arr Array of any type to average values of 
+ * @return Average of arr as a double
+ */
 template<typename T, size_t size>
 double averageArray(const array<T, size>& arr);
 
-template<typename T, size_t size>
-double medianArray(const array<T, size>& arr);
-
 void coutLine(int size = 50, char lineChar = '=');
+
+/**
+ * Accumulator function to add grocery prices via accumulate() function
+ * @param acc Accumulator variable to store summed prices
+ * @param g Reference to a grocery variable to take the price from
+ * @return Sum of accumulator variable and price of the grocery g
+ */
+double accPrices(double acc, const Grocery& g);
 
 int main() {
     const string FILENAME = "data.txt";
     const int SIZE = 5;
+    const int DISPLAY_AMOUNT = 5; //For displaying top 5/least 5 prices 
     string input;
     array<Grocery, SIZE> groceries;
     fillGroceries(groceries, FILENAME);
     cout << "Displaying data: " << endl;
-    displayGroceries(groceries);
+    displayGroceries(groceries)   
+}
 
-    
+double accPrices(double acc, const Grocery&g) {
+    return acc + g.price;
 }
 
 void coutLine(int size, char lineChar) {
@@ -85,13 +108,6 @@ void displayGroceries(const array<Grocery, size>& arr) {
     }
     cout << endl;
 
-}
-
-template<typename T, size_t size>
-double medianArray(const array<T, size>& arr) {
-    array<T, size> copy = arr;
-    sort(copy.begin(), copy.end());
-    return (size % 2 == 0) ? ((copy.at(size / 2) + copy.at((size / 2) - 1)) / 2.0) : (copy.at(size / 2));
 }
 
 template<typename T, size_t size>
