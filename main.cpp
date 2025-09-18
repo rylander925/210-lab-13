@@ -28,30 +28,23 @@ double medianArray(const array<T, size>& arr);
 
 void displayMenu();
 
-void coutLine(int size = 50, char lineChar = '=')
+void coutLine(int size = 50, char lineChar = '=');
 
 int main() {
-    array<int, 30> nums;
     const string FILENAME = "data.txt";
+    string input;
+    array<int, 30> nums;
     fillArray(nums, FILENAME);
+
     cout << "Displaying data: " << endl;
     displayArray(nums);
-    cout << "What would you like to do?" << endl;
+
     
 }
 
 void coutLine(int size, char lineChar) {
     char prevFillChar = cout.fill();
     cout << setw(size) << setfill(lineChar) << "" << setfill(prevFillChar) << endl;
-}
-
-void displayMenu() {
-    const static int OPTION_WIDTH = 10;
-    const static int DISPLAY_WIDTH = 50;
-    coutLine();
-    cout << "Type the name of an option, or type \"quit\" to quit" << endl;
-    cout << "OPTIONS: " << endl;
-    cout << " 1 "
 }
 
 template<typename T, size_t size>
