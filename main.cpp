@@ -76,7 +76,6 @@ string LowerString(const string str);
 
 int main() {
     const string FILENAME = "data.txt";
-    const int SIZE = 30;
     const int DISPLAY_AMOUNT = 5; //For displaying top 5/least 5 prices 
     double totalPrice;
     vector<Grocery> groceries;
@@ -139,8 +138,7 @@ int main() {
     } while (searchDummy.name != "quit");
 }
 
-template<size_t size>
-void fillGroceries(array<Grocery, size>& arr, string filename) {
+void fillGroceries(vector<Grocery>& vect, string filename) {
     //Open file
     ifstream infile;
     infile.open(filename);
@@ -152,27 +150,29 @@ void fillGroceries(array<Grocery, size>& arr, string filename) {
     //Fill groceries; assumes formatted as:
     //Blueberries
     //12.15
-    for(Grocery& g : arr) {
-        getline(infile, g.name);
+    Grocery g;
+    while(getline(infile, g.name)) {
         infile >> g.price;
+        vect.push_back(g);
+        g.name = "ERROR";
+        g.price = -1;
         infile.ignore(IGNORE_CHARS, '\n');
     }
     infile.close();
 }
 
-template<size_t size>
-void displayGroceries(const array<Grocery, size>& arr, bool showPrices, int nums, int columns, int columnWidth) {
+void displayGroceries(const vector<Grocery>& vect, int nums, bool showPrices, int columns, int columnWidth) {
     stringstream grocery;
     //Take the min of size & nums to prevent out of bounds errors
-    nums = (nums > size) ? size : nums;
+    nums = (nums > vect.size()) ? vect.size() : nums;
     //Outputs elements
     for(int i = 0; i < nums; i++) {
         //choose what to output: w/ prices or w/o prices
         if (showPrices) {
             //To properly use setw(), combine data into a string first using a stringstream
-            grocery << fixed << setprecision(2) << "$" << arr.at(i).price << " - " << arr.at(i).name;
+            grocery << fixed << setprecision(2) << "$" << vect.at(i).price << " - " << vect.at(i).name;
         } else {
-            grocery << arr.at(i).name;
+            grocery << vect.at(i).name;
         }
 
         cout << left << setw(columnWidth) << grocery.str();
