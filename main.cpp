@@ -3,7 +3,7 @@ COMSC-210 | Lab 13 | Rylan Der
 IDE Used: Visual Studio Code
 */
 
-#include <array>
+#include <vector>
 #include <fstream>
 #include <iostream>
 #include <algorithm>
@@ -34,25 +34,23 @@ bool operator>(const Grocery& g1, const Grocery& g2);
 bool operator>=(const Grocery& g1, const Grocery& g2);
 
 /**
- * Fills given array with grocery names and prices from the provided file
- * @param arr Array to fill with grocery objects
+ * Fills given vector with grocery names and prices from the provided file
+ * @param vect Vector to fill with grocery objects
  * @param filename Name of file to retrieve data from
  * @note File lines must be formatted as Names\nPrice without whitespace after name
  */
-template<size_t size>
-void fillGroceries(array<Grocery, size>& arr, string filename);
+void fillGroceries(vector<Grocery>& vect, string filename);
 
 /**
- * Displays given array of groceries
+ * Displays given vector of groceries
  * If specified, displays only the first given number of elements
- * @param arr Array of groceries to display
+ * @param vect Vector of groceries to display
  * @param nums If specified, amount of items to display
  * @param showPrices If true, will show prices with item names
  * @param columns Entries per line when displaying
  * @param columnWidth Spacing per column when displaying
  */
-template<size_t size>
-void displayGroceries(const array<Grocery, size>& arr, bool showPrices = true, int nums = size, int columns = 5, int columnWidth = 25);
+void displayGroceries(const vector<Grocery>& vect, int nums, bool showPrices = true, int columns = 5, int columnWidth = 25);
 
 /**
  * Output a line of characters
@@ -81,16 +79,16 @@ int main() {
     const int SIZE = 30;
     const int DISPLAY_AMOUNT = 5; //For displaying top 5/least 5 prices 
     double totalPrice;
-    array<Grocery, SIZE> groceries;
+    vector<Grocery> groceries;
 
     //Used with find() to prompt user for an item
     Grocery searchDummy; //operator== for find() requires another grocery object
-    array<Grocery, groceries.size()>::iterator foundGrocery;
+    vector<Grocery>::iterator foundGrocery;
 
-    //Populate & display array
+    //Populate & display vector
     fillGroceries(groceries, FILENAME);
     cout << "Displaying data: " << endl;
-    displayGroceries(groceries);
+    displayGroceries(groceries, groceries.size());
 
     //store price in a var to use to calculate average & show total price
     totalPrice = accumulate(groceries.begin(), groceries.end(), 0.0, accPrices);
@@ -111,11 +109,11 @@ int main() {
     coutLine();
     cout << "Top " << DISPLAY_AMOUNT << " cheapest items:" << endl;
     sort(groceries.begin(), groceries.end());
-    displayGroceries(groceries, true, DISPLAY_AMOUNT);
+    displayGroceries(groceries, DISPLAY_AMOUNT);
     coutLine();
     cout << "Top " << DISPLAY_AMOUNT << " most expensive items:" << endl;
     sort(groceries.rbegin(), groceries.rend());
-    displayGroceries(groceries, true, DISPLAY_AMOUNT);
+    displayGroceries(groceries, DISPLAY_AMOUNT);
 
     //Prompt user for item name & outputs its price. Continues until the user quits
     coutLine();
