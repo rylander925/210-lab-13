@@ -11,6 +11,7 @@
         "system_error": "cpp",
         "xlocale": "cpp",
         "string": "cpp",
-        "ios": "cpp"
+        "ios": "cpp",
+        "sstream": "cpp"
     }
 }

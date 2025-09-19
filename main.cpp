@@ -45,18 +45,19 @@ void fillGroceries(array<Grocery, size>& arr, string filename);
  * @todo Add better formatting
  * @param arr Array of groceries to display
  * @param nums If specified, amount of items to display
+ * @param showPrices If true, will show prices with item names
  * @param columns Entries per line when displaying
  * @param columnWidth Spacing per column when displaying
  */
 template<size_t size>
-void displayGroceries(const array<Grocery, size>& arr, int nums = size, int columns = 5, int columnWidth = 25);
+void displayGroceries(const array<Grocery, size>& arr, bool showPrices = true, int nums = size, int columns = 5, int columnWidth = 25);
 
 /**
  * Output a line of characters
  * @param size Length of the line
  * @param lineChar Character composing line
  */
-void coutLine(int size = 50, char lineChar = '=');
+void coutLine(int size = 150, char lineChar = '=');
 
 /**
  * Accumulator function to add grocery prices via accumulate() function
@@ -92,6 +93,7 @@ int main() {
 
     //Display total, average, max & min prices
     coutLine();
+    cout << fixed << setprecision(2);
     cout << "Items: " << groceries.size() << endl;
     cout << "Total price: $" << totalPrice << endl;
     cout << "Average price: $" << totalPrice / groceries.size() << endl;
@@ -105,36 +107,35 @@ int main() {
     coutLine();
     cout << "Top 5 cheapest items:" << endl;
     sort(groceries.begin(), groceries.end());
-    displayGroceries(groceries, 5);
+    displayGroceries(groceries, true, 5);
     coutLine();
     cout << "Top 5 most expensive items:" << endl;
     sort(groceries.rbegin(), groceries.rend());
-    displayGroceries(groceries, 5);
+    displayGroceries(groceries, true, 5);
 
     //Prompt user for an item name to find prices until a valid item is found
     coutLine();
     Grocery searchDummy; //operator== for find() requires another grocery object
     array<Grocery, groceries.size()>::iterator foundGrocery;
     do {
-        cout << "Enter the name of an item to search for or type \"quit\" to quit: " << endl;
-        //operator== compares names of groceries
-        //get name from input and populate it to the dummy Grocery variable
-        getline(cin, searchDummy.name);
-        foundGrocery = find(groceries.begin(), groceries.end(), searchDummy);
-
-        //output list of grocery names if given an invalid name
-        if (foundGrocery == groceries.end()) {
-            cout << " > Invalid grocery name. Here is a list of valid names:" << endl << " > ";
-            for(Grocery g : groceries) { 
-                cout << g.name << " " ;
+        do {
+            cout << "Enter the name of an item to search for or type \"quit\" to quit: " << endl;
+            //operator== compares names of groceries
+            //get name from input and populate it to the dummy Grocery variable
+            getline(cin, searchDummy.name);
+            foundGrocery = find(groceries.begin(), groceries.end(), searchDummy);
+    
+            //output list of grocery names if given an invalid name
+            if (foundGrocery == groceries.end() && searchDummy.name != "quit") {
+                cout << " > Invalid grocery name. Here is a list of valid names:" << endl;
+                displayGroceries(groceries, false);
             }
-            cout << endl << endl;
+        } while(foundGrocery == groceries.end() && searchDummy.name != "quit");
+        //output price of found item
+        if (searchDummy.name != "quit") {
+            cout << foundGrocery->name << ": $" << foundGrocery->price << endl;
         }
-    } while(foundGrocery == groceries.end() && searchDummy.name != "quit");
-    //output price of found item
-    if (searchDummy.name != "quit") {
-        cout << foundGrocery->name << ": " << foundGrocery->price << endl;
-    }
+    } while (searchDummy.name != "quit");
 }
 
 double accPrices(double acc, const Grocery&g) {
@@ -168,7 +169,7 @@ void fillGroceries(array<Grocery, size>& arr, string filename) {
 }
 
 template<size_t size>
-void displayGroceries(const array<Grocery, size>& arr, int nums, int columns, int columnWidth) {
+void displayGroceries(const array<Grocery, size>& arr, bool showPrices, int nums, int columns, int columnWidth) {
     //Set decimal precision for money formatting
     stringstream grocery;
     cout << fixed << setprecision(2);
@@ -176,9 +177,13 @@ void displayGroceries(const array<Grocery, size>& arr, int nums, int columns, in
     nums = (nums > size) ? size : nums;
     //Outputs elements followed by two spaces
     for(int i = 0; i < nums; i++) { 
-        grocery << fixed << setprecision(2) << "$" << arr.at(i).price << " - " << arr.at(i).name;
+        if (showPrices) {
+            grocery << fixed << setprecision(2) << "$" << arr.at(i).price << " - " << arr.at(i).name;
+        } else {
+            grocery << arr.at(i).name;
+        }
         cout << left << setw(columnWidth) << grocery.str();
-        if (i % (columns) == (columns - 1)) {
+        if ((i % (columns) == (columns - 1)) && (i != nums - 1)) {
             cout << endl;
         }
         grocery.str("");
