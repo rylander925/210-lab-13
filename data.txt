@@ -50,6 +50,16 @@ Bread
 5.99
 Milk
 3.99
+Soda
+1.99
+Fruit Juice
+3.99
+Coffee
+2.99
+Hot Chocolate
+2.99
+Tea Bags
+4.99
 Yogurt
 4.99
 Ice Cream
@@ -63,5 +73,9 @@ Cupcakes
 Spaghetti
 4.99
 Canned Soup
+1.99
+Peanut Butter
 3.99
+Jam
+4.99
 

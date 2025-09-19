@@ -147,7 +147,8 @@ void fillGroceries(vector<Grocery>& vect, string filename) {
         cout << "ERROR: File not found: \"" << filename  << "\"" << endl;
         throw ios_base::failure("Invalid file name");
     }
-    //Fill groceries; assumes formatted as:
+    //Fill groceries until eof
+    //assumes formatted as:
     //Blueberries
     //12.15
     Grocery g;
