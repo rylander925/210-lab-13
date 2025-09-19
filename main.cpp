@@ -128,7 +128,7 @@ int main() {
             //output list of grocery names if given an invalid name
             if (foundGrocery == groceries.end() && searchDummy.name != "quit") {
                 cout << " > Invalid grocery name. Here is a list of valid names:" << endl;
-                displayGroceries(groceries, false);
+                displayGroceries(groceries, groceries.size(), false);
             }
         } while(foundGrocery == groceries.end() && searchDummy.name != "quit");
         //output price of found item
@@ -153,9 +153,9 @@ void fillGroceries(vector<Grocery>& vect, string filename) {
     Grocery g;
     while(getline(infile, g.name)) {
         infile >> g.price;
-        vect.push_back(g);
-        g.name = "ERROR";
-        g.price = -1;
+        if (!infile.eof()) {
+            vect.push_back(g);
+        }
         infile.ignore(IGNORE_CHARS, '\n');
     }
     infile.close();
