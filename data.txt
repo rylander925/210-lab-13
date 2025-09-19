@@ -37,7 +37,7 @@ Bacon
 Chicken
 9.99
 Steak
-14.99
+24.99
 Salmon
 10.99
 Bagel
@@ -56,6 +56,6 @@ Ice Cream
 5.99
 Cake
 19.99
-Pizza
-34.99
+Frozen Pizza
+19.99
 

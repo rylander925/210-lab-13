@@ -19,6 +19,7 @@ const int IGNORE_CHARS = 100; //Characters ignored by istream.ignore()
 struct Grocery {
     string name;
     double price;
+
     //For >, <, >=, <=, compare groceries by price for sorting, min, and max
     friend bool operator<(const Grocery& g1, const Grocery& g2);
 
@@ -26,6 +27,7 @@ struct Grocery {
     //(the "==" operator is not useful for doubles anyways)
     friend bool operator==(const Grocery& g1, const Grocery& g2);
 };
+
 //Add other comparisons in case min/max requires
 bool operator<=(const Grocery& g1, const Grocery& g2);
 bool operator>(const Grocery& g1, const Grocery& g2);
@@ -74,9 +76,6 @@ double accPrices(double acc, const Grocery& g);
  */
 string LowerString(const string str);
 
-/**
- * @todo test
- */
 int main() {
     const string FILENAME = "data.txt";
     const int SIZE = 30;
@@ -110,13 +109,13 @@ int main() {
 
     //Use sort w/ forward & reverse iterators to display cheapest/most expensive items
     coutLine();
-    cout << "Top 5 cheapest items:" << endl;
+    cout << "Top " << DISPLAY_AMOUNT << " cheapest items:" << endl;
     sort(groceries.begin(), groceries.end());
-    displayGroceries(groceries, true, 5);
+    displayGroceries(groceries, true, DISPLAY_AMOUNT);
     coutLine();
-    cout << "Top 5 most expensive items:" << endl;
+    cout << "Top " << DISPLAY_AMOUNT << " most expensive items:" << endl;
     sort(groceries.rbegin(), groceries.rend());
-    displayGroceries(groceries, true, 5);
+    displayGroceries(groceries, true, DISPLAY_AMOUNT);
 
     //Prompt user for item name & outputs its price. Continues until the user quits
     coutLine();
