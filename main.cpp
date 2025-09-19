@@ -28,7 +28,7 @@ struct Grocery {
     friend bool operator==(const Grocery& g1, const Grocery& g2);
 };
 
-//Add other comparisons in case min/max requires
+//Other comparisons in case min/max requires
 bool operator<=(const Grocery& g1, const Grocery& g2);
 bool operator>(const Grocery& g1, const Grocery& g2);
 bool operator>=(const Grocery& g1, const Grocery& g2);

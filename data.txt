@@ -55,7 +55,13 @@ Yogurt
 Ice Cream
 5.99
 Cake
-19.99
+15.99
 Frozen Pizza
 19.99
+Cupcakes
+12.99
+Spaghetti
+4.99
+Canned Soup
+3.99
 
