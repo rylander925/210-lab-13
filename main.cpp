@@ -23,6 +23,7 @@ struct Grocery {
     friend bool operator<(const Grocery& g1, const Grocery& g2);
 
     //For ==, compare groceries by name for find()
+    //(the "==" operator is not useful for doubles anyways)
     friend bool operator==(const Grocery& g1, const Grocery& g2);
 };
 //Add other comparisons in case min/max requires
@@ -42,7 +43,6 @@ void fillGroceries(array<Grocery, size>& arr, string filename);
 /**
  * Displays given array of groceries
  * If specified, displays only the first given number of elements
- * @todo Add better formatting
  * @param arr Array of groceries to display
  * @param nums If specified, amount of items to display
  * @param showPrices If true, will show prices with item names
@@ -75,21 +75,26 @@ double accPrices(double acc, const Grocery& g);
 string LowerString(const string str);
 
 /**
- * @todo add compatability with display amount
  * @todo test
  */
 int main() {
     const string FILENAME = "data.txt";
     const int SIZE = 30;
     const int DISPLAY_AMOUNT = 5; //For displaying top 5/least 5 prices 
-
     double totalPrice;
     array<Grocery, SIZE> groceries;
 
+    //Used with find() to prompt user for an item
+    Grocery searchDummy; //operator== for find() requires another grocery object
+    array<Grocery, groceries.size()>::iterator foundGrocery;
+
+    //Populate & display array
     fillGroceries(groceries, FILENAME);
-    totalPrice = accumulate(groceries.begin(), groceries.end(), 0.0, accPrices);
     cout << "Displaying data: " << endl;
-    displayGroceries(groceries); //side effect: sets precision formatting to money format
+    displayGroceries(groceries);
+
+    //store price in a var to use to calculate average & show total price
+    totalPrice = accumulate(groceries.begin(), groceries.end(), 0.0, accPrices);
 
     //Display total, average, max & min prices
     coutLine();
@@ -113,11 +118,10 @@ int main() {
     sort(groceries.rbegin(), groceries.rend());
     displayGroceries(groceries, true, 5);
 
-    //Prompt user for an item name to find prices until a valid item is found
+    //Prompt user for item name & outputs its price. Continues until the user quits
     coutLine();
-    Grocery searchDummy; //operator== for find() requires another grocery object
-    array<Grocery, groceries.size()>::iterator foundGrocery;
     do {
+        //Prompt user for an item name to find prices until a valid item is found
         do {
             cout << "Enter the name of an item to search for or type \"quit\" to quit: " << endl;
             //operator== compares names of groceries
@@ -136,15 +140,6 @@ int main() {
             cout << foundGrocery->name << ": $" << foundGrocery->price << endl;
         }
     } while (searchDummy.name != "quit");
-}
-
-double accPrices(double acc, const Grocery&g) {
-    return acc + g.price;
-}
-
-void coutLine(int size, char lineChar) {
-    char prevFillChar = cout.fill();
-    cout << setw(size) << setfill(lineChar) << "" << setfill(prevFillChar) << endl;
 }
 
 template<size_t size>
@@ -170,28 +165,34 @@ void fillGroceries(array<Grocery, size>& arr, string filename) {
 
 template<size_t size>
 void displayGroceries(const array<Grocery, size>& arr, bool showPrices, int nums, int columns, int columnWidth) {
-    //Set decimal precision for money formatting
     stringstream grocery;
-    cout << fixed << setprecision(2);
     //Take the min of size & nums to prevent out of bounds errors
     nums = (nums > size) ? size : nums;
-    //Outputs elements followed by two spaces
-    for(int i = 0; i < nums; i++) { 
+    //Outputs elements
+    for(int i = 0; i < nums; i++) {
+        //choose what to output: w/ prices or w/o prices
         if (showPrices) {
+            //To properly use setw(), combine data into a string first using a stringstream
             grocery << fixed << setprecision(2) << "$" << arr.at(i).price << " - " << arr.at(i).name;
         } else {
             grocery << arr.at(i).name;
         }
+
         cout << left << setw(columnWidth) << grocery.str();
+
+        //add an endl after every "columns" elements
         if ((i % (columns) == (columns - 1)) && (i != nums - 1)) {
             cout << endl;
         }
+
+        //clear stringstream for next set of data
         grocery.str("");
     }
     cout << endl;
 }
 
 string LowerString(const string str) {
+    //creates a copy of the string and makes it lowercase
     string newStr = str;
     for (char& c : newStr) {
         c = tolower(c);
@@ -199,21 +200,21 @@ string LowerString(const string str) {
     return newStr;
 }
 
+void coutLine(int size, char lineChar) {
+    char prevFillChar = cout.fill();
+    cout << setw(size) << setfill(lineChar) << "" << setfill(prevFillChar) << endl;
+}
+
+//to be passed to accumulate function
+double accPrices(double acc, const Grocery&g) { return acc + g.price; }
+
 //Compare by name for compatability with find()
 bool operator==(const Grocery& g1, const Grocery& g2) {
     return LowerString(g1.name) == LowerString(g2.name);
 }
 
 //Define comparison operators to compare by prices
-bool operator<(const Grocery& g1, const Grocery& g2) {
-    return g1.price < g2.price;
-}
-bool operator>(const Grocery& g1, const Grocery& g2) {
-    return g2.price < g1.price;
-}
-bool operator<=(const Grocery& g1, const Grocery& g2) {
-    return !(g2.price < g1.price);
-}
-bool operator>=(const Grocery& g1, const Grocery& g2) {
-    return !(g1.price < g2.price);
-}
+bool operator<(const Grocery& g1, const Grocery& g2) { return g1.price < g2.price; }
+bool operator>(const Grocery& g1, const Grocery& g2) { return g2.price < g1.price; }
+bool operator<=(const Grocery& g1, const Grocery& g2) { return !(g2.price < g1.price); }
+bool operator>=(const Grocery& g1, const Grocery& g2) { return !(g1.price < g2.price); }
