@@ -45,9 +45,11 @@ void fillGroceries(array<Grocery, size>& arr, string filename);
  * @todo Add better formatting
  * @param arr Array of groceries to display
  * @param nums If specified, amount of items to display
+ * @param columns Entries per line when displaying
+ * @param columnWidth Spacing per column when displaying
  */
 template<size_t size>
-void displayGroceries(const array<Grocery, size>& arr, int nums = size);
+void displayGroceries(const array<Grocery, size>& arr, int nums = size, int columns = 5, int columnWidth = 25);
 
 /**
  * Output a line of characters
@@ -77,7 +79,7 @@ string LowerString(const string str);
  */
 int main() {
     const string FILENAME = "data.txt";
-    const int SIZE = 5;
+    const int SIZE = 30;
     const int DISPLAY_AMOUNT = 5; //For displaying top 5/least 5 prices 
 
     double totalPrice;
@@ -90,7 +92,7 @@ int main() {
 
     //Display total, average, max & min prices
     coutLine();
-    cout << "Items: " << groceries.size();
+    cout << "Items: " << groceries.size() << endl;
     cout << "Total price: $" << totalPrice << endl;
     cout << "Average price: $" << totalPrice / groceries.size() << endl;
     cout << "Price range: $" 
@@ -166,14 +168,20 @@ void fillGroceries(array<Grocery, size>& arr, string filename) {
 }
 
 template<size_t size>
-void displayGroceries(const array<Grocery, size>& arr, int nums) {
+void displayGroceries(const array<Grocery, size>& arr, int nums, int columns, int columnWidth) {
     //Set decimal precision for money formatting
+    stringstream grocery;
     cout << fixed << setprecision(2);
     //Take the min of size & nums to prevent out of bounds errors
     nums = (nums > size) ? size : nums;
     //Outputs elements followed by two spaces
     for(int i = 0; i < nums; i++) { 
-        cout << arr.at(i).name << ": $" << arr.at(i).price << "  ";
+        grocery << fixed << setprecision(2) << "$" << arr.at(i).price << " - " << arr.at(i).name;
+        cout << left << setw(columnWidth) << grocery.str();
+        if (i % (columns) == (columns - 1)) {
+            cout << endl;
+        }
+        grocery.str("");
     }
     cout << endl;
 }

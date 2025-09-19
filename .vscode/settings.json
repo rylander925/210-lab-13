@@ -9,6 +9,8 @@
         "numeric": "cpp",
         "xutility": "cpp",
         "system_error": "cpp",
-        "xlocale": "cpp"
+        "xlocale": "cpp",
+        "string": "cpp",
+        "ios": "cpp"
     }
 }
